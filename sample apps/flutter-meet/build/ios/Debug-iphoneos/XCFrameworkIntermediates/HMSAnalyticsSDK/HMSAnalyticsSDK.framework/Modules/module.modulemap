@@ -1,0 +1,11 @@
+framework module HMSAnalyticsSDK {
+  umbrella header "HMSAnalyticsSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module HMSAnalyticsSDK.Swift {
+    header "HMSAnalyticsSDK-Swift.h"
+    requires objc
+}

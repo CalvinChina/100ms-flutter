@@ -1,0 +1,11 @@
+framework module HMSHLSPlayerSDK {
+  umbrella header "HMSHLSPlayerSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module HMSHLSPlayerSDK.Swift {
+    header "HMSHLSPlayerSDK-Swift.h"
+    requires objc
+}
