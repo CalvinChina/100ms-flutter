@@ -1,0 +1,1722 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HMSSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVKit
+import Accelerate
+import CoreImage.CIFilterBuiltins
+import CoreImage
+import CoreMedia
+import Foundation
+import HMSAnalyticsSDK
+@_exported import HMSSDK
+import MetalKit
+import ReplayKit
+import Swift
+import SwiftUI
+import UIKit
+import VideoToolbox
+import Vision
+import WebRTC
+import _AVKit_SwiftUI
+import _Concurrency
+import _StringProcessing
+import os.log
+import os
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollLeaderboardResponse : ObjectiveC.NSObject {
+  @objc final public let entries: [HMSPollLeaderboardEntry]
+  @objc final public let summary: HMSPollLeaderboardSummary
+  @objc final public let hasNext: Swift.Bool
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollLeaderboardSummary : ObjectiveC.NSObject {
+  @objc final public let totalPeersCount: Swift.Int
+  @objc final public let respondedPeersCount: Swift.Int
+  @objc final public let respondedCorrectlyPeersCount: Swift.Int
+  @objc final public let averageTime: Swift.Float
+  @objc final public let averageScore: Swift.Float
+  @objc deinit
+}
+@objc @objcMembers public class HMSPollLeaderboardEntry : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let position: Swift.Int
+  @objc final public let score: Swift.Int
+  @objc final public let totalResponses: Swift.Int
+  @objc final public let correctResponses: Swift.Int
+  @objc final public let duration: Swift.Float
+  @objc final public let peer: HMSPollResponsePeerInfo?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @objc public class HMSAudioFilePlayerNode : HMSAudioNode {
+  @objc dynamic public init()
+  @objc public var volume: Swift.Float {
+    @objc get
+    @objc set
+  }
+  @objc public func play(fileUrl: Foundation.URL, loops: Swift.Bool = false, interrupts: Swift.Bool = true, completionHandler: AVFAudio.AVAudioNodeCompletionHandler? = nil) throws
+  @objc public func pause()
+  @objc public func resume() throws
+  @objc public func stop()
+  @objc public var isPlaying: Swift.Bool {
+    @objc get
+  }
+  @objc public var currentTime: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc public var duration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollQuestionAnswer : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let hidden: Swift.Bool
+  final public let option: Swift.Int?
+  @objc final public let options: [Swift.Int]?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @objcMembers public class HMSSpeaker : ObjectiveC.NSObject {
+  @objc final public let peer: HMSPeer
+  @objc final public let track: HMSTrack
+  @objc final public let level: Swift.Int
+  @objc public init(peer: HMSPeer, track: HMSTrack, level: Swift.Int)
+  @objc deinit
+}
+extension HMSSDK : HMSAnalyticsSDK.HMSAnalytics {
+  @objc dynamic public func sendEvent(_ name: Swift.String, payload: [Swift.String : Any], level: HMSAnalyticsSDK.HMSAnalyticsEventLevel)
+}
+extension Foundation.NSNotification.Name {
+  public static let hmsPeerStateDidChange: Foundation.Notification.Name
+}
+public let kHMSPeerStateDidChangeNotification: Swift.String
+@objc public enum HMSPeerType : Swift.Int {
+  case regular
+  case sip
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPeer : ObjectiveC.NSObject {
+  @objc final public let peerID: Swift.String
+  @objc final public let customerUserID: Swift.String?
+  @objc final public let isLocal: Swift.Bool
+  @objc final public let type: HMSPeerType
+  @objc public var name: Swift.String {
+    @objc get
+  }
+  @objc public var role: HMSRole? {
+    @objc get
+  }
+  @objc public var metadata: Swift.String? {
+    @objc get
+  }
+  @objc public var audioTrack: HMSAudioTrack? {
+    @objc get
+  }
+  @objc public var videoTrack: HMSVideoTrack? {
+    @objc get
+  }
+  @objc public var auxiliaryTracks: [HMSTrack]? {
+    get
+  }
+  @objc public var networkQuality: HMSNetworkQuality? {
+    @objc get
+  }
+  @objc public var isHandRaised: Swift.Bool {
+    @objc get
+  }
+  @objc public var joinedAt: Foundation.Date {
+    get
+  }
+  @objc public var updatedAt: Foundation.Date {
+    get
+  }
+  @objc deinit
+}
+extension HMSPeer {
+  public static func == (lhs: HMSPeer, rhs: HMSPeer) -> Swift.Bool
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSLocalPeer : HMSPeer {
+  @objc public func localAudioTrack() -> HMSLocalAudioTrack?
+  @objc public func localVideoTrack() -> HMSLocalVideoTrack?
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSRemotePeer : HMSPeer {
+  @objc public func remoteAudioTrack() -> HMSRemoteAudioTrack?
+  @objc public func remoteVideoTrack() -> HMSRemoteVideoTrack?
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc public class HMSAudioBufferSource : HMSAudioSource {
+  @objc dynamic public init()
+  @objc public func enqueue(buffer: AVFAudio.AVAudioBuffer)
+  @objc deinit
+}
+@objc public enum HMSErrorAction : Swift.Int {
+  case none
+  case track
+  case `init`
+  case publish
+  case join
+  case subscribe
+  case dataChannelSend
+  case token
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objc public class HMSErrorFactory : ObjectiveC.NSObject {
+  @objc public func websocketConnectionLost(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func httpError(code: Swift.Int, action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func invalidEndpointUrl(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func endpointUnreachable(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func invalidTokenFormat(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func genericTrack(action: HMSErrorAction, errorInfo: Swift.String = "", params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func cantAccessCaptureDevice(action: HMSErrorAction, deviceInfo: Swift.String, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func nothingToReturn(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func codecChangeNotPermitted(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func audiovideoSubsystemFailure(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func micCaptureFailed(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func createOfferFailed(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func createAnswerFailed(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func setLocalDescriptionFailed(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func setRemoteDescriptionFailed(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func iceFailure(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func iceDisconnected(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func serverErrors(code: Swift.Int, action: HMSErrorAction, serverError: Swift.String, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func alreadyJoined(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func notConnected(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func unknown(action: HMSErrorAction, errorInfo: Swift.String = "", params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func unknownSoft(action: HMSErrorAction, errorInfo: Swift.String = "", params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func nsError(error: Swift.Error?, params: [Swift.String : Any]? = nil, isTerminal: Swift.Bool = false, message: Swift.String? = nil) -> Foundation.NSError?
+  @objc public func jsonParsingFailed(action: HMSErrorAction, jsonMessage: Swift.String, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func trackMetadataMissing(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func rtcTrackMissing(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc public func peerMetadataMissing(action: HMSErrorAction, params: [Swift.String : Any]? = nil) -> Foundation.NSError
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HMSError {
+  public var canRetry: Swift.Bool {
+    get
+  }
+  public var isTerminal: Swift.Bool {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollQuestionResponse : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let questionID: Swift.Int
+  @objc final public let type: HMSPollQuestionType
+  @objc final public let skipped: Swift.Bool
+  @objc final public let option: Swift.Int
+  @objc final public let options: [Swift.Int]?
+  @objc final public let text: Swift.String
+  @objc final public let update: Swift.Bool
+  @objc final public let duration: Swift.Int
+  @objc final public let peer: HMSPollResponsePeerInfo?
+  final public let responseFinal: Swift.Bool?
+  required public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class HMSScreenBroadcastAudioNode : HMSAudioNode, HMSScreenAudioBufferReceiver {
+  public var bufferReceiveBlock: ((AVFAudio.AVAudioPCMBuffer) -> Swift.Void)?
+  @objc public func didReceiveAudioData(_ data: Foundation.Data)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class HMSPollQuestion : Swift.Codable {
+  final public let index: Swift.Int
+  final public let text: Swift.String
+  final public let skippable: Swift.Bool
+  final public let duration: Swift.Int
+  final public let once: Swift.Bool
+  final public let weight: Swift.Int
+  final public let answerMinLen: Swift.Int?
+  final public let answerMaxLen: Swift.Int?
+  final public let type: HMSPollQuestionType
+  final public let options: [HMSPollQuestionOption]?
+  final public let answer: HMSPollQuestionAnswer?
+  public var responses: [HMSPollQuestionResponse]?
+  public var myResponses: [HMSPollQuestionResponse]
+  required public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+extension HMSPollQuestion {
+  public var voted: Swift.Bool {
+    get
+  }
+}
+@objc public enum HMSPollQuestionType : Swift.Int, Swift.Codable, Swift.CaseIterable {
+  case singleChoice
+  case multipleChoice
+  case shortAnswer
+  case longAnswer
+  public init?(rawValue: Swift.Int)
+  public typealias AllCases = [HMSPollQuestionType]
+  public typealias RawValue = Swift.Int
+  public static var allCases: [HMSPollQuestionType] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSFrameCapturePlugin : HMSVideoPlugin {
+  @objc public func capture() -> UIKit.UIImage?
+  @objc override dynamic public func process(_ frame: CoreVideo.CVPixelBuffer) -> CoreVideo.CVPixelBuffer
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class HMSHLSTimedMetadata : ObjectiveC.NSObject, Swift.Codable {
+  @objc public init(payload: Swift.String, duration: Swift.Int = 1)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public protocol HMSDataSourceDelegate : AnyObject {
+  func didUpdate(_ model: HMSViewModel?)
+  func didUpdate(_ speakers: [HMSViewModel])
+}
+public class HMSDataSource {
+  public var hms: HMSSDK?
+  public var sections: [HMSSection]
+  public var allModels: [HMSViewModel] {
+    get
+  }
+  weak public var delegate: HMSDataSourceDelegate?
+  public var sortComparator: ((HMSViewModel, HMSViewModel) -> Swift.Bool)?
+  public var filter: ((HMSViewModel) -> Swift.Bool)?
+  public var sectionProducer: ((HMSViewModel) -> HMSSection.SectionIdentifier)?
+  public init()
+  public func reload()
+  @objc deinit
+}
+extension HMSDataSource : HMSUpdateListener {
+  @objc dynamic public func on(join room: HMSRoom)
+  @objc dynamic public func on(room: HMSRoom, update: HMSRoomUpdate)
+  @objc dynamic public func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer])
+  @objc dynamic public func on(peer: HMSPeer, update: HMSPeerUpdate)
+  @objc dynamic public func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer)
+  @objc dynamic public func on(updated speakers: [HMSSpeaker])
+  @objc dynamic public func on(error: Swift.Error)
+  @objc dynamic public func on(message: HMSMessage)
+  @objc dynamic public func onReconnecting()
+  @objc dynamic public func onReconnected()
+}
+@_hasMissingDesignatedInitializers public class HMSViewModel {
+  public var identifier: Swift.String
+  final public let peer: HMSPeer
+  public var videoTrack: HMSVideoTrack?
+  @objc deinit
+}
+extension HMSViewModel : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (lhs: HMSViewModel, rhs: HMSViewModel) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class HMSSection {
+  public typealias SectionIdentifier = Swift.String
+  public var models: [HMSViewModel]
+  @objc deinit
+}
+extension HMSSection : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (lhs: HMSSection, rhs: HMSSection) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSVideoFilterPlugin : HMSVideoPlugin {
+  @objc public static let defaultHue: CoreFoundation.CGFloat
+  @objc public static let defaultSaturation: CoreFoundation.CGFloat
+  @objc public static let defaultBrightness: CoreFoundation.CGFloat
+  @objc public static let defaultContrast: CoreFoundation.CGFloat
+  @objc public static let defaultSmoothness: CoreFoundation.CGFloat
+  @objc public static let defaultRedness: CoreFoundation.CGFloat
+  @objc public static let defaultSharpness: CoreFoundation.CGFloat
+  @objc public static let defaultExposure: CoreFoundation.CGFloat
+  @objc public var hue: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var saturation: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var brightness: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var contrast: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var smoothness: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var redness: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var sharpness: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc public var exposure: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  public var coreImageTransformers: [(CoreImage.CIImage) -> CoreImage.CIImage]
+  @objc override dynamic public func process(_ frame: CoreVideo.CVPixelBuffer) -> CoreVideo.CVPixelBuffer
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSHLSConfig : ObjectiveC.NSObject {
+  @objc final public let variants: [HMSHLSMeetingURLVariant]?
+  @objc final public let recording: HMSHLSRecordingConfig?
+  @objc override dynamic public init()
+  @objc public init(variants: [HMSHLSMeetingURLVariant]? = nil, recording: HMSHLSRecordingConfig? = nil)
+  @objc deinit
+}
+@objc @objcMembers public class HMSHLSRecordingConfig : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let singleFilePerLayer: Swift.Bool
+  @objc final public let enableVOD: Swift.Bool
+  @objc public init(singleFilePerLayer: Swift.Bool = false, enableVOD: Swift.Bool = false)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSHLSMeetingURLVariant : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let meetingURL: Foundation.URL?
+  @objc final public let metadata: Swift.String
+  @objc override dynamic public init()
+  @objc public init(meetingURL: Foundation.URL? = nil, metadata: Swift.String = "")
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public struct HMSFrameworkInfo {
+  public let type: HMSFrameworkType?
+  public let version: Swift.String?
+  public let sdkVersion: Swift.String?
+  public let isPrebuilt: Swift.Bool?
+  public init(type: HMSFrameworkType? = nil, version: Swift.String? = nil, sdkVersion: Swift.String? = nil, isPrebuilt: Swift.Bool? = nil)
+}
+public enum HMSFrameworkType : Swift.String {
+  case reactWeb
+  case reactNative
+  case flutter
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+@objc extension Foundation.NSNotification {
+  @objc public static var kHMSDidAddScreenTrack: Swift.String {
+    @objc get
+  }
+  @objc public static var kHMSDidRemoveScreenTrack: Swift.String {
+    @objc get
+  }
+}
+@_inheritsConvenienceInitializers @objc public class HMSScreenShareConstants : ObjectiveC.NSObject {
+  @objc public static let kHMSScreenOrientationKey: Swift.String
+  @objc public static let kHMSActiveSDKId: Swift.String
+  @objc public static let kHMSActiveSDKIdForAudio: Swift.String
+  @objc public static let kHMSScreenMachPortName: Swift.String
+  @objc public static let kHMSAudioMachPortName: Swift.String
+  @objc public static let kHMSScreenShareFPS: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+infix operator ==? : ComparisonPrecedence
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSRTMPConfig : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  public init(meetingURL: Foundation.URL?, rtmpURLs: [Foundation.URL]?, record: Swift.Bool, resolution: HMSVideoResolution? = nil)
+  @objc deinit
+}
+extension HMSRole {
+  @objc dynamic public var canPublish: Swift.Bool {
+    @objc get
+  }
+}
+@objc public enum HMSRoomUpdate : Swift.Int, Swift.CustomStringConvertible {
+  case roomTypeChanged
+  case metaDataUpdated
+  case peerCountUpdated
+  case browserRecordingStateUpdated
+  case serverRecordingStateUpdated
+  case rtmpStreamingStateUpdated
+  case hlsStreamingStateUpdated
+  case hlsRecordingStateUpdated
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSRemovedFromRoomNotification : ObjectiveC.NSObject {
+  @objc final public let requestedBy: HMSPeer?
+  @objc final public let reason: Swift.String
+  @objc final public let roomEnded: Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSRoleChangeRequest : ObjectiveC.NSObject {
+  @objc final public let suggestedRole: HMSRole
+  @objc final public let requestedBy: HMSPeer?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class HMSPollQuestionResponseResult : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let question: Swift.Int
+  final public let correct: Swift.Bool?
+  @objc final public let error: Swift.Error?
+  required public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSNetworkQuality : ObjectiveC.NSObject {
+  @objc final public let downlinkQuality: Swift.Int
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc @_Concurrency.MainActor(unsafe) public class HMSSampleBufferDisplayView : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public class var layerClass: Swift.AnyClass {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var isEnabled: Swift.Bool
+  @objc @_Concurrency.MainActor(unsafe) public var track: HMSVideoTrack? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var preferredSize: CoreFoundation.CGSize
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) public var videoContentMode: UIKit.UIView.ContentMode {
+    get
+    set
+  }
+  @objc deinit
+}
+extension HMSSampleBufferDisplayView : WebRTC.RTCVideoRenderer {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func setSize(_ size: CoreFoundation.CGSize)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func renderFrame(_ frame: WebRTC.RTCVideoFrame?)
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSChangeTrackStateRequest : ObjectiveC.NSObject {
+  @objc final public let track: HMSTrack
+  @objc final public let mute: Swift.Bool
+  @objc final public let requestedBy: HMSPeer?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPoll : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let pollID: Swift.String
+  @objc final public let title: Swift.String
+  @objc final public let duration: Swift.Int
+  @objc final public let anonymous: Swift.Bool
+  final public let mode: HMSPollUserTrackingMode?
+  @objc final public let rolesThatCanVote: [HMSRole]
+  @objc final public let rolesThatCanViewResponses: [HMSRole]
+  final public let questionCount: Swift.Int?
+  @objc final public let startedBy: HMSPeer?
+  @objc final public let stoppedBy: HMSPeer?
+  @objc public var createdBy: HMSPeer? {
+    get
+  }
+  @objc public var startedAt: Foundation.Date? {
+    get
+  }
+  @objc public var stoppedAt: Foundation.Date? {
+    get
+  }
+  @objc final public let category: HMSPollCategory
+  @objc public var state: HMSPollState {
+    get
+  }
+  public var questions: [HMSPollQuestion]? {
+    get
+  }
+  @objc public var result: HMSPollResult? {
+    get
+  }
+  required public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+@objc public enum HMSPollUserTrackingMode : Swift.Int, Swift.Codable {
+  case peerID
+  case customerUserID
+  case userName
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum HMSPollState : Swift.Int, Swift.Codable {
+  case created
+  case started
+  case stopped
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum HMSPollCategory : Swift.Int, Swift.Codable {
+  case poll
+  case quiz
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum HMSRecordingState : Swift.Int {
+  case none
+  case starting
+  case started
+  case paused
+  case resumed
+  case stopped
+  case failed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension HMSRecordingState {
+  public func displayString() -> Swift.String
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSBaseRecordingState : ObjectiveC.NSObject {
+  @objc public var initialising: Swift.Bool {
+    @objc get
+  }
+  @objc public var running: Swift.Bool {
+    @objc get
+  }
+  @objc final public let startedAt: Foundation.Date?
+  @objc final public let error: Swift.Error?
+  @objc final public let state: HMSRecordingState
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSBrowserRecordingState : HMSBaseRecordingState {
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSServerRecordingState : HMSBaseRecordingState {
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSHLSRecordingState : HMSBaseRecordingState {
+  @objc deinit
+}
+@objc public enum HMSStreamingState : Swift.Int {
+  case none
+  case starting
+  case started
+  case stopped
+  case failed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+extension HMSStreamingState {
+  public func displayString() -> Swift.String
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSBaseStreamingState : ObjectiveC.NSObject {
+  @objc public var running: Swift.Bool {
+    @objc get
+  }
+  @objc final public let startedAt: Foundation.Date?
+  @objc final public let error: Swift.Error?
+  @objc final public let state: HMSStreamingState
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSRTMPStreamingState : HMSBaseStreamingState {
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSHLSStreamingState : HMSBaseStreamingState {
+  @objc final public let variants: [HMSHLSVariant]
+  @objc override dynamic public var hash: Swift.Int {
+    @objc get
+  }
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@objc public enum HMSHLSPlaylistType : Swift.Int, Swift.Codable {
+  case dvr
+  case noDVR
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSHLSVariant : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let url: Foundation.URL?
+  @objc final public let meetingURL: Foundation.URL
+  @objc final public let metadata: Swift.String
+  @objc final public let startedAt: Foundation.Date?
+  final public let playlistType: HMSHLSPlaylistType?
+  @objc override dynamic public init()
+  @objc override dynamic public var hash: Swift.Int {
+    @objc get
+  }
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @objc public class HMSAudioBufferPlayerNode : HMSAudioNode {
+  @objc dynamic public init()
+  @objc public var volume: Swift.Float {
+    @objc get
+    @objc set
+  }
+  @objc public func play(buffer: AVFAudio.AVAudioPCMBuffer) throws
+  @objc public func pause()
+  @objc public func resume() throws
+  @objc public func stop()
+  @objc public var isPlaying: Swift.Bool {
+    @objc get
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSSessionStore : ObjectiveC.NSObject {
+  @objc public func object(forKey key: Swift.String, completion: @escaping ((Any?, Swift.Error?) -> Swift.Void))
+  @objc public func set(_ object: Any, forKey key: Swift.String, completion: ((Any?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func observeChanges(forKeys keys: [Swift.String], changeObserver: @escaping (Swift.String, Any?) -> Swift.Void, completion: ((ObjectiveC.NSObjectProtocol?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func removeObserver(_ observer: ObjectiveC.NSObjectProtocol)
+  @objc deinit
+}
+@objc @available(iOS 15.0, *)
+@objcMembers public class HMSVirtualBackgroundPlugin : HMSVideoPlugin {
+  @objc public var frameRate: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc public var backgroundImage: UIKit.UIImage? {
+    @objc get
+    @objc set
+  }
+  @objc public init(backgroundImage: UIKit.UIImage?, blurRadius: Foundation.NSNumber? = nil)
+  @objc override dynamic public func process(_ frame: CoreVideo.CVPixelBuffer) -> CoreVideo.CVPixelBuffer
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class HMSAudioSource : ObjectiveC.NSObject {
+  public func didReceiveAudioData(_ data: Foundation.Data)
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSLocalScreenTrack : HMSVideoTrack, HMSScreenVideoBufferReceiver {
+  @available(iOS 16.0, *)
+  @objc public func didReceiveVideoData(_ data: Foundation.Data)
+  @objc deinit
+}
+@objc public enum HMSTrackUpdate : Swift.Int, Swift.CustomStringConvertible {
+  case trackAdded
+  case trackRemoved
+  case trackMuted
+  case trackUnmuted
+  case trackDescriptionChanged
+  case trackDegraded
+  case trackRestored
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSPollBuilder : ObjectiveC.NSObject {
+  @objc public func withPollID(_ pollID: Swift.String) -> HMSPollBuilder
+  @objc public func withTitle(_ title: Swift.String) -> HMSPollBuilder
+  @objc public func withDuration(_ duration: Swift.Int) -> HMSPollBuilder
+  @objc public func withAnonymous(_ anonymous: Swift.Bool) -> HMSPollBuilder
+  @objc public func withCategory(_ category: HMSPollCategory) -> HMSPollBuilder
+  @objc public func withUserTrackingMode(_ mode: HMSPollUserTrackingMode) -> HMSPollBuilder
+  @objc public func withRolesThatCanVote(_ rolesThatCanVote: [HMSRole]?) -> HMSPollBuilder
+  @objc public func withRolesThatCanViewResponses(_ rolesThatCanViewResponses: [HMSRole]?) -> HMSPollBuilder
+  @objc public func addMultiChoiceQuestion(with title: Swift.String, options: [Swift.String]) -> HMSPollBuilder
+  @objc public func addSingleChoiceQuestion(with title: Swift.String, options: [Swift.String]) -> HMSPollBuilder
+  @objc public func addQuestion(with builder: HMSPollQuestionBuilder) -> HMSPollBuilder
+  @objc public func addShortAnswerQuestion(with title: Swift.String) -> HMSPollBuilder
+  @objc public func addLongAnswerQuestion(with title: Swift.String) -> HMSPollBuilder
+  @objc public func build() -> HMSPoll
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension HMSSDK {
+  @objc dynamic public func getAuthTokenByRoomCode(_ roomCode: Swift.String, userID: Swift.String? = nil, completion: @escaping (Swift.String?, Swift.Error?) -> Swift.Void)
+}
+@_hasMissingDesignatedInitializers @objc public class HMSAudioOutputDevice : ObjectiveC.NSObject {
+  @objc public static let speaker: HMSAudioOutputDevice
+  @objc public static let earpiece: HMSAudioOutputDevice
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSRoom : ObjectiveC.NSObject {
+  @objc public var name: Swift.String? {
+    get
+  }
+  @objc public var roomID: Swift.String? {
+    get
+  }
+  @objc public var sessionID: Swift.String? {
+    get
+  }
+  @objc public var sessionStartedAt: Foundation.Date? {
+    get
+  }
+  @objc public var metaData: Swift.String? {
+    get
+  }
+  @objc public var peers: [HMSPeer] {
+    get
+  }
+  public var peerCount: Swift.Int? {
+    get
+  }
+  @objc public var isLarge: Swift.Bool {
+    get
+  }
+  @objc public var browserRecordingState: HMSBrowserRecordingState {
+    get
+  }
+  @objc public var serverRecordingState: HMSServerRecordingState {
+    get
+  }
+  @objc public var hlsRecordingState: HMSHLSRecordingState {
+    get
+  }
+  @objc public var rtmpStreamingState: HMSRTMPStreamingState {
+    get
+  }
+  @objc public var hlsStreamingState: HMSHLSStreamingState {
+    get
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSMessage : ObjectiveC.NSObject {
+  @objc final public let messageID: Swift.String
+  @objc final public let message: Swift.String
+  @objc final public let type: Swift.String
+  @objc public var sender: HMSPeer?
+  @objc public var recipient: HMSMessageRecipient
+  @objc final public let time: Foundation.Date
+  @objc public init(message: Swift.String, type: Swift.String = "chat")
+  @objc public init(message: Swift.String, type: Swift.String = "chat", peerRecipient: HMSPeer)
+  @objc public init(message: Swift.String, type: Swift.String = "chat", rolesRecipient: [HMSRole])
+  @objc deinit
+}
+@objc public enum HMSMessageRecipientType : Swift.Int {
+  case broadcast = 0
+  case peer
+  case roles
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSMessageRecipient : ObjectiveC.NSObject {
+  @objc final public let type: HMSMessageRecipientType
+  @objc final public let peerRecipient: HMSPeer?
+  @objc final public let rolesRecipient: [HMSRole]?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum HMSPluginUnsupportedErrorTypes : Swift.Int {
+  case none
+  case operatingSystemNotSupported
+  case deviceNotsupported
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum HMSPluginSupportResultType : Swift.Int {
+  case supported
+  case unsupported
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class HMSPluginSupportResult : ObjectiveC.NSObject {
+  @objc public static var supported: HMSPluginSupportResult
+  @objc public static var deviceNotSupported: HMSPluginSupportResult
+  @objc public static var operatingSystemNotSupported: HMSPluginSupportResult
+  @objc public init(type: HMSPluginSupportResultType, errorType: HMSPluginUnsupportedErrorTypes = .none, errorMessage: Swift.String? = nil)
+  @objc deinit
+}
+@objc public protocol HMSPlugin {
+  @objc func checkSupport() -> HMSPluginSupportResult
+  @objc func activate() -> HMSPluginSupportResult
+  @objc func deactivate()
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSRole : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let name: Swift.String
+  @objc final public let publishSettings: HMSPublishSettings
+  @objc final public let subscribeSettings: HMSSubscribeSettings
+  @objc final public let permissions: HMSPermissions
+  @objc final public let priority: Swift.Int
+  @objc final public let generalPermissions: [Swift.String : Swift.String]?
+  @objc final public let internalPlugins: [Swift.String : Swift.String]?
+  @objc final public let externalPlugins: [Swift.String : Swift.String]?
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc override dynamic public var hash: Swift.Int {
+    @objc get
+  }
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSPublishSettings : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let audio: HMSAudioSettings
+  @objc final public let video: HMSVideoSettings
+  @objc final public let screen: HMSVideoSettings
+  @objc final public let simulcast: HMSSimulcastSettings?
+  @objc final public let allowed: [Swift.String]?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSAudioSettings : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let bitRate: Swift.Int
+  @objc final public let codec: Swift.String
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSVideoSettings : ObjectiveC.NSObject, Swift.Codable {
+  final public let bitRate: Swift.Int?
+  @objc final public let codec: Swift.String
+  @objc final public let frameRate: Swift.Int
+  @objc final public let width: Swift.Int
+  @objc final public let height: Swift.Int
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @objcMembers public class HMSSimulcastSettings : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let video: HMSSimulcastSettingsPolicy?
+  @objc final public let screen: HMSSimulcastSettingsPolicy?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @objcMembers public class HMSSimulcastSettingsPolicy : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let layers: [HMSSimulcastLayerSettingsPolicy]?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @objcMembers public class HMSSimulcastLayerSettingsPolicy : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let rid: Swift.String
+  final public let scaleResolutionDownBy: Swift.Double?
+  final public let maxBitrate: Swift.Int?, maxFramerate: Swift.Int?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSSubscribeSettings : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let subscribeToRoles: [Swift.String]?
+  @objc final public let maxSubsBitRate: Swift.Int
+  @objc final public let subscribeDegradation: HMSSubscribeDegradationPolicy?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers public class HMSSubscribeDegradationPolicy : ObjectiveC.NSObject, Swift.Codable {
+  public var packetLossThreshold: Swift.Int?, degradeGracePeriodSeconds: Swift.Int?, recoverGracePeriodSeconds: Swift.Int?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSPermissions : ObjectiveC.NSObject, Swift.Codable {
+  final public let endRoom: Swift.Bool?
+  final public let removeOthers: Swift.Bool?
+  final public let unmute: Swift.Bool?
+  final public let mute: Swift.Bool?
+  final public let changeRole: Swift.Bool?
+  final public let hlsStreaming: Swift.Bool?
+  final public let rtmpStreaming: Swift.Bool?
+  final public let browserRecording: Swift.Bool?
+  final public let pollRead: Swift.Bool?
+  final public let pollWrite: Swift.Bool?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers @available(iOS 13.0, *)
+@objc public class HMSAudioMixerSource : HMSAudioSource {
+  @objc public init(nodes: [HMSAudioNode]) throws
+  @objc deinit
+  @objc public func reconnect()
+}
+@frozen public struct AnyDecodable : Swift.Decodable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+@usableFromInline
+internal protocol _AnyDecodable {
+  var value: Any { get }
+  init<T>(_ value: T?)
+}
+extension AnyDecodable : _AnyDecodable {
+}
+extension _AnyDecodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension AnyDecodable : Swift.Equatable {
+  public static func == (lhs: AnyDecodable, rhs: AnyDecodable) -> Swift.Bool
+}
+extension AnyDecodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyDecodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AnyDecodable : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@frozen public struct AnyEncodable : Swift.Encodable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+@usableFromInline
+internal protocol _AnyEncodable {
+  var value: Any { get }
+  init<T>(_ value: T?)
+}
+extension AnyEncodable : _AnyEncodable {
+}
+extension _AnyEncodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension AnyEncodable : Swift.Equatable {
+  public static func == (lhs: AnyEncodable, rhs: AnyEncodable) -> Swift.Bool
+}
+extension AnyEncodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyEncodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AnyEncodable : Swift.ExpressibleByNilLiteral {
+}
+extension AnyEncodable : Swift.ExpressibleByBooleanLiteral {
+  public typealias BooleanLiteralType = Swift.Bool
+}
+extension AnyEncodable : Swift.ExpressibleByIntegerLiteral {
+  public typealias IntegerLiteralType = Swift.Int
+}
+extension AnyEncodable : Swift.ExpressibleByFloatLiteral {
+  public typealias FloatLiteralType = Swift.Double
+}
+extension AnyEncodable : Swift.ExpressibleByStringLiteral {
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+extension AnyEncodable : Swift.ExpressibleByStringInterpolation {
+  public typealias StringInterpolation = Swift.DefaultStringInterpolation
+}
+extension AnyEncodable : Swift.ExpressibleByArrayLiteral {
+  public typealias ArrayLiteralElement = Any
+}
+extension AnyEncodable : Swift.ExpressibleByDictionaryLiteral {
+  public typealias Key = Swift.AnyHashable
+  public typealias Value = Any
+}
+extension _AnyEncodable {
+  public init(nilLiteral _: ())
+  public init(booleanLiteral value: Swift.Bool)
+  public init(integerLiteral value: Swift.Int)
+  public init(floatLiteral value: Swift.Double)
+  public init(extendedGraphemeClusterLiteral value: Swift.String)
+  public init(stringLiteral value: Swift.String)
+  public init(arrayLiteral elements: Any...)
+  public init(dictionaryLiteral elements: (Swift.AnyHashable, Any)...)
+}
+extension AnyEncodable : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@frozen public struct AnyCodable : Swift.Codable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+extension AnyCodable : _AnyEncodable, _AnyDecodable {
+}
+extension AnyCodable : Swift.Equatable {
+  public static func == (lhs: AnyCodable, rhs: AnyCodable) -> Swift.Bool
+}
+extension AnyCodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyCodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AnyCodable : Swift.ExpressibleByNilLiteral {
+}
+extension AnyCodable : Swift.ExpressibleByBooleanLiteral {
+  public typealias BooleanLiteralType = Swift.Bool
+}
+extension AnyCodable : Swift.ExpressibleByIntegerLiteral {
+  public typealias IntegerLiteralType = Swift.Int
+}
+extension AnyCodable : Swift.ExpressibleByFloatLiteral {
+  public typealias FloatLiteralType = Swift.Double
+}
+extension AnyCodable : Swift.ExpressibleByStringLiteral {
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+extension AnyCodable : Swift.ExpressibleByStringInterpolation {
+  public typealias StringInterpolation = Swift.DefaultStringInterpolation
+}
+extension AnyCodable : Swift.ExpressibleByArrayLiteral {
+  public typealias ArrayLiteralElement = Any
+}
+extension AnyCodable : Swift.ExpressibleByDictionaryLiteral {
+  public typealias Key = Swift.AnyHashable
+  public typealias Value = Any
+}
+extension AnyCodable : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc public class HMSNoiseCancellationPlugin : ObjectiveC.NSObject {
+  @objc final public let modelPath: Swift.String
+  @objc final public let initialState: HMSNoiseCancellationInitialState
+  @objc public init(modelPath: Swift.String, initialState: HMSNoiseCancellationInitialState)
+  @objc public var isNoiseCancellationAvailable: Swift.Bool {
+    get
+  }
+  @objc public func isEnabled() -> Swift.Bool
+  @objc public func enable() throws
+  @objc public func disable() throws
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollQuestionOption : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let index: Swift.Int
+  @objc final public let text: Swift.String
+  @objc final public let weight: Swift.Int
+  @objc public var voteCount: Swift.Int
+  required public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+@objc @objcMembers public class HMSPollQuestionResult : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let question: Swift.Int
+  @objc final public let type: Swift.String
+  @objc final public let optionVoteCounts: [Swift.Int]?
+  @objc final public let correctVotes: Swift.Int
+  @objc final public let skippedVotes: Swift.Int
+  @objc final public let totalVotes: Swift.Int
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension HMSRoomLayout {
+  public var string: Swift.String? {
+    get
+  }
+  #if compiler(>=5.3) && $EffectfulProp
+  public var dictionary: [Swift.String : Swift.AnyObject]? {
+    get throws
+  }
+  #endif
+}
+public struct HMSRoomLayout : Swift.Codable {
+  public var rawData: Foundation.Data?
+  public let data: [HMSRoomLayout.LayoutData]?
+  public struct LayoutData : Swift.Codable {
+    public let id: Swift.String
+    public let role_id: Swift.String
+    public let role: Swift.String
+    public let template_id: Swift.String
+    public let app_id: Swift.String
+    public let themes: [HMSRoomLayout.LayoutData.Theme]
+    public struct Theme : Swift.Codable {
+      public let name: Swift.String
+      public let `default`: Swift.Bool
+      public let palette: HMSRoomLayout.LayoutData.Theme.ColorPalette?
+      public struct ColorPalette : Swift.Codable {
+        public let primary_default: Swift.String
+        public let primary_bright: Swift.String
+        public let primary_dim: Swift.String
+        public let primary_disabled: Swift.String
+        public let on_primary_high: Swift.String
+        public let on_primary_medium: Swift.String
+        public let on_primary_low: Swift.String
+        public let secondary_default: Swift.String
+        public let secondary_bright: Swift.String
+        public let secondary_dim: Swift.String
+        public let secondary_disabled: Swift.String
+        public let on_secondary_high: Swift.String
+        public let on_secondary_medium: Swift.String
+        public let on_secondary_low: Swift.String
+        public let background_default: Swift.String
+        public let background_dim: Swift.String
+        public let surface_default: Swift.String
+        public let surface_bright: Swift.String
+        public let surface_brighter: Swift.String
+        public let surface_dim: Swift.String
+        public let on_surface_high: Swift.String
+        public let on_surface_medium: Swift.String
+        public let on_surface_low: Swift.String
+        public let border_default: Swift.String
+        public let border_bright: Swift.String
+        public let alert_success: Swift.String
+        public let alert_warning: Swift.String
+        public let alert_error_default: Swift.String
+        public let alert_error_bright: Swift.String
+        public let alert_error_brighter: Swift.String
+        public let alert_error_dim: Swift.String
+        public func encode(to encoder: Swift.Encoder) throws
+        public init(from decoder: Swift.Decoder) throws
+      }
+      public func encode(to encoder: Swift.Encoder) throws
+      public init(from decoder: Swift.Decoder) throws
+    }
+    public let typography: HMSRoomLayout.LayoutData.Typography?
+    public struct Typography : Swift.Codable {
+      public let font_family: Swift.String?
+      public func encode(to encoder: Swift.Encoder) throws
+      public init(from decoder: Swift.Decoder) throws
+    }
+    public let logo: HMSRoomLayout.LayoutData.Logo?
+    public struct Logo : Swift.Codable {
+      public let url: Swift.String?
+      public func encode(to encoder: Swift.Encoder) throws
+      public init(from decoder: Swift.Decoder) throws
+    }
+    public let screens: HMSRoomLayout.LayoutData.Screens?
+    public struct Screens : Swift.Codable {
+      public let preview: HMSRoomLayout.LayoutData.Screens.Preview?
+      public struct Preview : Swift.Codable {
+        public let `default`: HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen?
+        public let skip_preview_screen: Swift.Bool?
+        public struct DefaultPreviewScreen : Swift.Codable {
+          public let elements: HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements?
+          public struct Elements : Swift.Codable {
+            public let preview_header: HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.PreviewHeader?
+            public struct PreviewHeader : Swift.Codable {
+              public let title: Swift.String
+              public let sub_title: Swift.String
+              public func encode(to encoder: Swift.Encoder) throws
+              public init(from decoder: Swift.Decoder) throws
+            }
+            public let join_form: HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.JoinForm
+            public struct JoinForm : Swift.Codable {
+              public let join_btn_type: HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.JoinForm.ButtonType
+              public enum ButtonType : Swift.String, Swift.Codable {
+                case join
+                case goLive
+                public init?(rawValue: Swift.String)
+                public typealias RawValue = Swift.String
+                public var rawValue: Swift.String {
+                  get
+                }
+              }
+              public let join_btn_label: Swift.String
+              public let go_live_btn_label: Swift.String
+              public func encode(to encoder: Swift.Encoder) throws
+              public init(from decoder: Swift.Decoder) throws
+            }
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public func encode(to encoder: Swift.Encoder) throws
+          public init(from decoder: Swift.Decoder) throws
+        }
+        public func encode(to encoder: Swift.Encoder) throws
+        public init(from decoder: Swift.Decoder) throws
+      }
+      public let conferencing: HMSRoomLayout.LayoutData.Screens.Conferencing
+      public struct Conferencing : Swift.Codable {
+        public struct Elements : Swift.Codable {
+          public let chat: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat?
+          public struct Chat : Swift.Codable {
+            public let initial_state: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat.InitialState
+            public enum InitialState : Swift.String, Swift.Codable {
+              case CHAT_STATE_OPEN
+              case CHAT_STATE_CLOSE
+              public init?(rawValue: Swift.String)
+              public typealias RawValue = Swift.String
+              public var rawValue: Swift.String {
+                get
+              }
+            }
+            public let is_overlay: Swift.Bool
+            public let allow_pinning_messages: Swift.Bool
+            public let public_chat_enabled: Swift.Bool
+            public let roles_whitelist: [Swift.String]
+            public let private_chat_enabled: Swift.Bool
+            public let chat_title: Swift.String
+            public let message_placeholder: Swift.String
+            public struct Controls : Swift.Codable {
+              public let can_disable_chat: Swift.Bool
+              public let can_block_user: Swift.Bool
+              public let can_hide_message: Swift.Bool
+              public func encode(to encoder: Swift.Encoder) throws
+              public init(from decoder: Swift.Decoder) throws
+            }
+            public let real_time_controls: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat.Controls?
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let participant_list: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.ParticipantList?
+          public struct ParticipantList : Swift.Codable {
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let video_tile_layout: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.VideoTileLayout?
+          public struct VideoTileLayout : Swift.Codable {
+            public let grid: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.VideoTileLayout.Grid
+            public struct Grid : Swift.Codable {
+              public let enable_local_tile_inset: Swift.Bool
+              public let prominent_roles: [Swift.String]
+              public let enable_spotlighting_peer: Swift.Bool
+              public func encode(to encoder: Swift.Encoder) throws
+              public init(from decoder: Swift.Decoder) throws
+            }
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let emoji_reactions: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.EmojiReactions?
+          public struct EmojiReactions : Swift.Codable {
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let on_stage_exp: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.OnStageExperience?
+          public struct OnStageExperience : Swift.Codable {
+            public let bring_to_stage_label: Swift.String
+            public let remove_from_stage_label: Swift.String
+            public let on_stage_role: Swift.String
+            public let off_stage_roles: [Swift.String]
+            public let skip_preview_for_role_change: Swift.Bool
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let hand_raise: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.HandRaise?
+          public struct HandRaise : Swift.Codable {
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let brb: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.BRB?
+          public struct BRB : Swift.Codable {
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public let header: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.ConferencingHeader?
+          public struct ConferencingHeader : Swift.Codable {
+            public let title: Swift.String
+            public let description: Swift.String
+            public func encode(to encoder: Swift.Encoder) throws
+            public init(from decoder: Swift.Decoder) throws
+          }
+          public func encode(to encoder: Swift.Encoder) throws
+          public init(from decoder: Swift.Decoder) throws
+        }
+        public let `default`: HMSRoomLayout.LayoutData.Screens.Conferencing.DefaultConferencingScreen?
+        public struct DefaultConferencingScreen : Swift.Codable {
+          public let elements: HMSRoomLayout.LayoutData.Screens.Conferencing.Elements?
+          public func encode(to encoder: Swift.Encoder) throws
+          public init(from decoder: Swift.Decoder) throws
+        }
+        public let hls_live_streaming: HMSRoomLayout.LayoutData.Screens.Conferencing.DefaultConferencingScreen?
+        public func encode(to encoder: Swift.Encoder) throws
+        public init(from decoder: Swift.Decoder) throws
+      }
+      public let leave: HMSRoomLayout.LayoutData.Screens.Leave?
+      public struct Leave : Swift.Codable {
+        public func encode(to encoder: Swift.Encoder) throws
+        public init(from decoder: Swift.Decoder) throws
+      }
+      public func encode(to encoder: Swift.Encoder) throws
+      public init(from decoder: Swift.Decoder) throws
+    }
+    public func encode(to encoder: Swift.Encoder) throws
+    public init(from decoder: Swift.Decoder) throws
+  }
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension HMSSDK {
+  public func getRoomLayout(using authToken: Swift.String, completion: @escaping (HMSRoomLayout?, Swift.Error?) -> Swift.Void)
+}
+@_inheritsConvenienceInitializers @objc public class HMSMicNode : HMSAudioNode {
+  @objc dynamic public init()
+  @objc public var volume: Swift.Float {
+    @objc get
+    @objc set
+  }
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class HMSAudioNode : ObjectiveC.NSObject {
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSPollQuestionBuilder : ObjectiveC.NSObject {
+  @objc public func withIndex(_ index: Swift.Int) -> HMSPollQuestionBuilder
+  @objc public func withCanBeSkipped(_ canBeSkipped: Swift.Bool) -> HMSPollQuestionBuilder
+  @objc public func withTitle(_ title: Swift.String) -> HMSPollQuestionBuilder
+  @objc public func withDuration(_ duration: Swift.Int) -> HMSPollQuestionBuilder
+  @objc public func withType(_ type: HMSPollQuestionType) -> HMSPollQuestionBuilder
+  @objc public func addOption(with title: Swift.String) -> HMSPollQuestionBuilder
+  @objc public func addQuizOption(with title: Swift.String, isCorrect: Swift.Bool) -> HMSPollQuestionBuilder
+  @objc public func withCanChangeResponse(canChangeResponse: Swift.Bool) -> HMSPollQuestionBuilder
+  @objc public func withMinLength(minLength: Swift.Int) -> HMSPollQuestionBuilder
+  @objc public func withMaxLength(maxLength: Swift.Int) -> HMSPollQuestionBuilder
+  @objc public func withWeight(weight: Swift.Int) -> HMSPollQuestionBuilder
+  @objc public func withAnswerHidden(answerHidden: Swift.Bool) -> HMSPollQuestionBuilder
+  public func build() -> HMSPollQuestion
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSInteractivityCenter : ObjectiveC.NSObject {
+  public typealias HMSPollListener = ((HMSPoll, HMSPollUpdateType) -> Swift.Void)
+  @objc public var polls: [HMSPoll]
+  @objc public func addPollUpdateListner(_ listener: @escaping HMSInteractivityCenter.HMSPollListener)
+  @objc public func quickStartPoll(with builder: HMSPollBuilder, completion: @escaping ((Swift.Bool, Swift.Error?) -> Swift.Void))
+  @objc public func create(poll: HMSPoll, completion: @escaping HMSAnalyticsSDK.HMSOperationStatusHandler)
+  public func setPollQuestions(poll: HMSPoll, questions: [HMSPollQuestion], completion: @escaping HMSAnalyticsSDK.HMSOperationStatusHandler)
+  @objc public func start(poll: HMSPoll, completion: @escaping HMSAnalyticsSDK.HMSOperationStatusHandler)
+  @objc public func add(response: HMSPollResponseBuilder, completion: @escaping (([HMSPollQuestionResponseResult]?, Swift.Error?) -> Swift.Void))
+  @objc public func stop(poll: HMSPoll, completion: @escaping ((Swift.Bool, Swift.Error?) -> Swift.Void))
+  @objc public func fetchPollQuestions(poll: HMSPoll, completion: @escaping ((HMSPoll?, Swift.Error?) -> Swift.Void))
+  @objc public func fetchPollList(state: HMSPollState, completion: @escaping (([HMSPoll]?, Swift.Error?) -> Swift.Void))
+  @objc public func fetchResponses(for poll: HMSPoll, offset: Swift.Int, count: Swift.Int, myResponseOnly: Swift.Bool = false, completion: @escaping (([HMSPollQuestionResponse]?, Swift.Error?) -> Swift.Void))
+  @objc public func fetchPollResult(for poll: HMSPoll, completion: @escaping ((HMSPoll?, Swift.Error?) -> Swift.Void))
+  @objc public func fetchLeaderboard(for poll: HMSPoll, offset: Swift.Int, count: Swift.Int, includeCurrentPeer: Swift.Bool = false, completion: @escaping ((HMSPollLeaderboardResponse?, Swift.Error?) -> Swift.Void))
+  @objc deinit
+}
+@objc public enum HMSPollUpdateType : Swift.Int {
+  case started
+  case resultsUpdated
+  case stopped
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSCommonTrackSource : ObjectiveC.NSObject {
+  @objc public static let regular: Swift.String
+  @objc public static let screen: Swift.String
+  @objc public static let plugin: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSUtilities : ObjectiveC.NSObject {
+  @objc public class func getDevices() -> [HMSDevice]
+  @objc public class func getAllVideoTracks(in room: HMSRoom) -> [HMSVideoTrack]
+  @objc public class func getAllAudioTracks(in room: HMSRoom) -> [HMSAudioTrack]
+  @objc public class func getPeer(for id: Swift.String, in room: HMSRoom) -> HMSPeer?
+  @objc public class func getTrack(for id: Swift.String, in room: HMSRoom) -> HMSTrack?
+  @objc public class func getAudioTrack(for id: Swift.String, in room: HMSRoom) -> HMSAudioTrack?
+  @objc public class func getVideoTrack(for id: Swift.String, in room: HMSRoom) -> HMSVideoTrack?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class HMSConfig : ObjectiveC.NSObject {
+  @objc final public let userName: Swift.String
+  @objc final public let userID: Swift.String
+  @objc final public let roomID: Swift.String
+  @objc final public let authToken: Swift.String
+  @objc final public let shouldSkipPIIEvents: Swift.Bool
+  @objc final public let metadata: Swift.String?
+  @objc final public let endpoint: Swift.String?
+  @objc final public let captureNetworkQualityInPreview: Swift.Bool
+  @objc public init(userName: Swift.String = "iOS User", authToken: Swift.String, shouldSkipPIIEvents: Swift.Bool = false, metadata: Swift.String? = nil, endpoint: Swift.String? = nil, captureNetworkQualityInPreview: Swift.Bool = false)
+  @objc @available(*, deprecated, message: "Use init(userName:authToken:)")
+  public init(userName: Swift.String = "iOS User", userID: Swift.String, roomID: Swift.String, authToken: Swift.String, shouldSkipPIIEvents: Swift.Bool = false, metadata: Swift.String? = nil, endpoint: Swift.String? = nil)
+  @objc deinit
+}
+@objc public protocol HMSUpdateListener {
+  @objc(onJoin:) func on(join room: HMSRoom)
+  @objc(onRoom:update:) func on(room: HMSRoom, update: HMSRoomUpdate)
+  @objc(onPeerListUpdate:removed:) func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer])
+  @objc(onPeer:update:) func on(peer: HMSPeer, update: HMSPeerUpdate)
+  @objc(onTrack:update:peer:) func on(track: HMSTrack, update: HMSTrackUpdate, for peer: HMSPeer)
+  @objc(onError:) func on(error: Swift.Error)
+  @objc(onMessage:) func on(message: HMSMessage)
+  @objc(roleChangeRequest:) optional func on(roleChangeRequest: HMSRoleChangeRequest)
+  @objc(changeTrackStateRequest:) optional func on(changeTrackStateRequest: HMSChangeTrackStateRequest)
+  @objc(removedFromRoom:) optional func on(removedFromRoom notification: HMSRemovedFromRoomNotification)
+  @objc(onUpdatedSpeakers:) func on(updated speakers: [HMSSpeaker])
+  @objc func onReconnecting()
+  @objc func onReconnected()
+  @objc(onLocalAudioStats:track:peer:) optional func on(localAudioStats: HMSLocalAudioStats, track: HMSAudioTrack, peer: HMSPeer)
+  @objc(onLocalVideoStats:track:peer:) optional func on(localVideoStats: [HMSLocalVideoStats], track: HMSVideoTrack, peer: HMSPeer)
+  @objc(onRemoteAudioStats:track:peer:) optional func on(remoteAudioStats: HMSRemoteAudioStats, track: HMSAudioTrack, peer: HMSPeer)
+  @objc(onRemoteVideoStats:track:peer:) optional func on(remoteVideoStats: HMSRemoteVideoStats, track: HMSVideoTrack, peer: HMSPeer)
+  @objc(onRTCStats:) optional func on(rtcStats: HMSRTCStatsReport)
+  @objc(onSessionStoreAvailable:) optional func on(sessionStoreAvailable store: HMSSessionStore)
+}
+@objc public protocol HMSPreviewListener {
+  @objc(onPreview:localTracks:) func onPreview(room: HMSRoom, localTracks: [HMSTrack])
+  @objc(onError:) func on(error: Swift.Error)
+  @objc(onRoom:update:) optional func on(room: HMSRoom, update: HMSRoomUpdate)
+  @objc(onPeerListUpdate:removed:) optional func onPeerListUpdate(added: [HMSPeer], removed: [HMSPeer])
+  @objc(onPeer:update:) optional func on(peer: HMSPeer, update: HMSPeerUpdate)
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class HMSSDK : ObjectiveC.NSObject {
+  @objc public static func build(block: ((HMSSDK) -> Swift.Void)? = nil) -> HMSSDK
+  @objc public func preview(config: HMSConfig, delegate: HMSPreviewListener)
+  @objc public func preview(role: HMSRole, completion: (([HMSTrack]?, Swift.Error?) -> Swift.Void))
+  @objc public func cancelPreview()
+  @objc public func join(config: HMSConfig, delegate: HMSUpdateListener)
+  @objc public func leave(_ completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public var localPeer: HMSLocalPeer? {
+    @objc get
+  }
+  @objc public var remotePeers: [HMSRemotePeer]? {
+    @objc get
+  }
+  @objc public var roles: [HMSRole] {
+    @objc get
+  }
+  @objc public var room: HMSRoom? {
+    @objc get
+  }
+  @objc public var interactivityCenter: HMSInteractivityCenter {
+    @objc get
+  }
+  @objc public func sendBroadcastMessage(type: Swift.String = "chat", message: Swift.String, priority: HMSCommandPriority = .medium, completion: ((HMSMessage?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func sendGroupMessage(type: Swift.String = "chat", message: Swift.String, roles: [HMSRole], priority: HMSCommandPriority = .medium, completion: ((HMSMessage?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func sendDirectMessage(type: Swift.String = "chat", message: Swift.String, peer: HMSPeer, priority: HMSCommandPriority = .medium, completion: ((HMSMessage?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func change(metadata: Swift.String, priority: HMSCommandPriority = .medium, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func change(name: Swift.String, priority: HMSCommandPriority = .medium, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func changeRole(for peer: HMSPeer, to role: HMSRole, force: Swift.Bool = false, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func changeRolesOfAllPeers(to role: HMSRole, limitToRoles: [HMSRole]? = nil, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func accept(changeRole request: HMSRoleChangeRequest, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func changeTrackState(for remoteTrack: HMSTrack, mute: Swift.Bool, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  public func changeTrackState(mute: Swift.Bool, for trackKind: HMSTrackKind? = nil, source: Swift.String? = nil, roles: [HMSRole]? = nil, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func removePeer(_ peer: HMSPeer, reason: Swift.String, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func endRoom(lock: Swift.Bool = false, reason: Swift.String, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func startRTMPOrRecording(config: HMSRTMPConfig, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func stopRTMPAndRecording(completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func startHLSStreaming(config: HMSHLSConfig? = nil, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func stopHLSStreaming(config: HMSHLSConfig? = nil, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func sendHLSTimedMetadata(_ metadata: [HMSHLSTimedMetadata], completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc @available(*, deprecated, message: "Please use HMSSessionStore instead")
+  public func getSessionMetadata(completion: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  @objc @available(*, deprecated, message: "Please use HMSSessionStore instead")
+  public func setSessionMetadata(_ metadata: Swift.String, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func raiseLocalPeerHand(completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func lowerLocalPeerHand(completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func lowerRemotePeerHand(_ peer: HMSPeer, completion: ((Swift.Bool, Swift.Error?) -> Swift.Void)? = nil)
+  public func getPeerListIterator(options: HMSPeerListIteratorOptions = HMSPeerListIteratorOptions()) -> HMSPeerListIterator
+  @objc public func add(delegate: HMSUpdateListener)
+  @objc public func remove(delegate: HMSUpdateListener)
+  @objc public var trackSettings: HMSTrackSettings {
+    @objc get
+    @objc set
+  }
+  @objc public var analyticsLevel: HMSAnalyticsSDK.HMSAnalyticsEventLevel {
+    @objc get
+    @objc set
+  }
+  @objc weak public var logger: HMSAnalyticsSDK.HMSLogger? {
+    @objc get
+    @objc set
+  }
+  @objc public func prepareForExternalAudioPlayback()
+  @objc public func resumeAfterExternalAudioPlayback()
+  @objc public var appGroup: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc public func screenBroadcastAudioReceiverNode() throws -> HMSScreenBroadcastAudioNode
+  @objc public func activateForScreenSharing()
+  public var frameworkInfo: HMSFrameworkInfo? {
+    get
+    set
+  }
+  @objc public func getAudioOutputDeviceList() -> [HMSAudioOutputDevice]
+  @objc public func switchAudioOutput(to device: HMSAudioOutputDevice) throws
+  @objc public func startAppScreenCapture(completion: ((Swift.Error?) -> Swift.Void)? = nil)
+  @objc public func stopAppScreenCapture(completion: ((Swift.Error?) -> Swift.Void)? = nil)
+  @objc deinit
+}
+@objc public enum HMSCommandPriority : Swift.Int {
+  case low
+  case medium
+  case high
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class HMSPollResponseBuilder : ObjectiveC.NSObject {
+  @objc public init(poll: HMSPoll)
+  public func addResponse(for question: HMSPollQuestion, options: [HMSPollQuestionOption], duration: Swift.Int? = nil)
+  public func addResponse(for openQuestion: HMSPollQuestion, text: Swift.String, duration: Swift.Int? = nil)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class HMSTrackFactory : ObjectiveC.NSObject {
+  @objc deinit
+}
+public class HMSPeerListIteratorOptions {
+  final public let filterByRoleName: Swift.String?
+  final public let filterByPeerIds: [Swift.String]?
+  final public let limit: Swift.Int
+  public init(filterByRoleName: Swift.String? = nil, filterByPeerIds: [Swift.String]? = nil, limit: Swift.Int = 10)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class HMSPeerListIterator {
+  final public let options: HMSPeerListIteratorOptions
+  public var hasNext: Swift.Bool {
+    get
+  }
+  public var totalCount: Swift.Int {
+    get
+  }
+  public func next(completion: @escaping (([HMSPeer]?, Swift.Error?) -> Swift.Void))
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class HMSPollResponsePeerInfo : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let userHash: Swift.String?
+  @objc final public let peerID: Swift.String?
+  @objc final public let customerUserID: Swift.String?
+  @objc final public let userName: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HMSDevice : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum HMSPeerUpdate : Swift.Int, Swift.CustomStringConvertible {
+  case peerJoined
+  case peerLeft
+  case roleUpdated
+  case nameUpdated
+  case metadataUpdated
+  case handRaiseUpdated
+  case networkQualityUpdated
+  case defaultUpdate
+  public var description: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class HMSPollResult : ObjectiveC.NSObject, Swift.Codable {
+  @objc final public let totalResponse: Swift.Int
+  @objc final public let userCount: Swift.Int
+  @objc final public let maxUserCount: Swift.Int
+  @objc final public let questions: [HMSPollQuestionResult]
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension HMSPeerType : Swift.Equatable {}
+extension HMSPeerType : Swift.Hashable {}
+extension HMSPeerType : Swift.RawRepresentable {}
+extension HMSErrorAction : Swift.Equatable {}
+extension HMSErrorAction : Swift.Hashable {}
+extension HMSErrorAction : Swift.RawRepresentable {}
+extension HMSPollQuestionType : Swift.Equatable {}
+extension HMSPollQuestionType : Swift.Hashable {}
+extension HMSPollQuestionType : Swift.RawRepresentable {}
+extension HMSFrameworkType : Swift.Equatable {}
+extension HMSFrameworkType : Swift.Hashable {}
+extension HMSFrameworkType : Swift.RawRepresentable {}
+extension HMSCommandPriority : Swift.Equatable {}
+extension HMSCommandPriority : Swift.Hashable {}
+extension HMSCommandPriority : Swift.RawRepresentable {}
+extension HMSRoomUpdate : Swift.Equatable {}
+extension HMSRoomUpdate : Swift.Hashable {}
+extension HMSRoomUpdate : Swift.RawRepresentable {}
+extension HMSPollUserTrackingMode : Swift.Equatable {}
+extension HMSPollUserTrackingMode : Swift.Hashable {}
+extension HMSPollUserTrackingMode : Swift.RawRepresentable {}
+extension HMSPollState : Swift.Equatable {}
+extension HMSPollState : Swift.Hashable {}
+extension HMSPollState : Swift.RawRepresentable {}
+extension HMSPollCategory : Swift.Equatable {}
+extension HMSPollCategory : Swift.Hashable {}
+extension HMSPollCategory : Swift.RawRepresentable {}
+extension HMSRecordingState : Swift.Equatable {}
+extension HMSRecordingState : Swift.Hashable {}
+extension HMSRecordingState : Swift.RawRepresentable {}
+extension HMSStreamingState : Swift.Equatable {}
+extension HMSStreamingState : Swift.Hashable {}
+extension HMSStreamingState : Swift.RawRepresentable {}
+extension HMSHLSPlaylistType : Swift.Equatable {}
+extension HMSHLSPlaylistType : Swift.Hashable {}
+extension HMSHLSPlaylistType : Swift.RawRepresentable {}
+extension HMSTrackUpdate : Swift.Equatable {}
+extension HMSTrackUpdate : Swift.Hashable {}
+extension HMSTrackUpdate : Swift.RawRepresentable {}
+extension HMSMessageRecipientType : Swift.Equatable {}
+extension HMSMessageRecipientType : Swift.Hashable {}
+extension HMSMessageRecipientType : Swift.RawRepresentable {}
+extension HMSPluginUnsupportedErrorTypes : Swift.Equatable {}
+extension HMSPluginUnsupportedErrorTypes : Swift.Hashable {}
+extension HMSPluginUnsupportedErrorTypes : Swift.RawRepresentable {}
+extension HMSPluginSupportResultType : Swift.Equatable {}
+extension HMSPluginSupportResultType : Swift.Hashable {}
+extension HMSPluginSupportResultType : Swift.RawRepresentable {}
+extension HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.JoinForm.ButtonType : Swift.Equatable {}
+extension HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.JoinForm.ButtonType : Swift.Hashable {}
+extension HMSRoomLayout.LayoutData.Screens.Preview.DefaultPreviewScreen.Elements.JoinForm.ButtonType : Swift.RawRepresentable {}
+extension HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat.InitialState : Swift.Equatable {}
+extension HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat.InitialState : Swift.Hashable {}
+extension HMSRoomLayout.LayoutData.Screens.Conferencing.Elements.Chat.InitialState : Swift.RawRepresentable {}
+extension HMSPollUpdateType : Swift.Equatable {}
+extension HMSPollUpdateType : Swift.Hashable {}
+extension HMSPollUpdateType : Swift.RawRepresentable {}
+extension HMSPeerUpdate : Swift.Equatable {}
+extension HMSPeerUpdate : Swift.Hashable {}
+extension HMSPeerUpdate : Swift.RawRepresentable {}
