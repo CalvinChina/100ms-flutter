@@ -1,0 +1,11 @@
+framework module HMSBroadcastExtensionSDK {
+  umbrella header "HMSBroadcastExtensionSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module HMSBroadcastExtensionSDK.Swift {
+    header "HMSBroadcastExtensionSDK-Swift.h"
+    requires objc
+}

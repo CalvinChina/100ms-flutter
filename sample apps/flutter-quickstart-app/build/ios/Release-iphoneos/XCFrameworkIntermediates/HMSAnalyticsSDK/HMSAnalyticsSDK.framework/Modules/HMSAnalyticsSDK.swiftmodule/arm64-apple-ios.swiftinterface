@@ -1,0 +1,27 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HMSAnalyticsSDK
+import Foundation
+@_exported import HMSAnalyticsSDK
+import Swift
+import _Concurrency
+@objc public protocol HMSAnalytics {
+  @objc func sendEvent(_ name: Swift.String, payload: [Swift.String : Any], level: HMSAnalyticsSDK.HMSAnalyticsEventLevel)
+}
+@objc public enum HMSLogLevel : Swift.Int {
+  case off = 0
+  case error
+  case warning
+  case verbose
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public protocol HMSLogger {
+  @objc(logMessage:level:) func log(_ message: Swift.String, _ level: HMSAnalyticsSDK.HMSLogLevel)
+}
+extension HMSAnalyticsSDK.HMSLogLevel : Swift.Equatable {}
+extension HMSAnalyticsSDK.HMSLogLevel : Swift.Hashable {}
+extension HMSAnalyticsSDK.HMSLogLevel : Swift.RawRepresentable {}

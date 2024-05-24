@@ -1,0 +1,112 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HMSHLSPlayerSDK
+import AVFoundation
+import AVKit
+import CoreGraphics
+import Foundation
+import HMSAnalyticsSDK
+@_exported import HMSHLSPlayerSDK
+import Swift
+import UIKit
+import _Concurrency
+@_hasMissingDesignatedInitializers @objc public class HMSHLSCue : ObjectiveC.NSObject {
+  final public let id: Swift.String
+  final public let startDate: Foundation.Date
+  final public let endDate: Foundation.Date?
+  final public let payload: Swift.String?
+  @objc deinit
+}
+@objc public enum HMSHLSPlaybackState : Swift.Int {
+  case playing, stopped, paused, buffering, failed, unknown
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public protocol HMSHLSPlayerDelegate {
+  @objc optional func onResolutionChanged(videoSize: CoreGraphics.CGSize)
+  @objc optional func onPlaybackFailure(error: Swift.Error)
+  @objc optional func onCue(cue: HMSHLSPlayerSDK.HMSHLSCue)
+  @objc optional func onPlaybackStateChanged(state: HMSHLSPlayerSDK.HMSHLSPlaybackState)
+}
+@_inheritsConvenienceInitializers @objc public class HMSHLSPlayer : ObjectiveC.NSObject {
+  @objc weak public var delegate: HMSHLSPlayerSDK.HMSHLSPlayerDelegate?
+  @objc public func videoPlayerViewController(showsPlayerControls: Swift.Bool) -> AVKit.AVPlayerViewController
+  @objc public var playerOverlayView: UIKit.UIView? {
+    @objc get
+  }
+  @objc public var statMonitor: HMSHLSPlayerSDK.HMSHLSStatsMonitor {
+    @objc get
+    @objc set
+  }
+  @objc public var _nativePlayer: AVFoundation.AVPlayer
+  @objc public var volume: Swift.Int {
+    @objc get
+    @objc set
+  }
+  @objc weak public var analytics: HMSAnalyticsSDK.HMSAnalytics? {
+    @objc get
+    @objc set
+  }
+  @objc public var lastError: Swift.Error? {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+  @objc public func play(_ url: Foundation.URL)
+  @objc public func stop()
+  @objc public func pause()
+  @objc public func resume()
+  @objc public func seekForward(seconds: Foundation.TimeInterval)
+  @objc public func seekBackward(seconds: Foundation.TimeInterval)
+  @objc public func seekToLivePosition()
+  @objc override dynamic public func observeValue(forKeyPath keyPath: Swift.String?, of object: Any?, change: [Foundation.NSKeyValueChangeKey : Any]?, context: Swift.UnsafeMutableRawPointer?)
+}
+extension HMSHLSPlayerSDK.HMSHLSPlayer : AVFoundation.AVPlayerItemMetadataCollectorPushDelegate {
+  @objc dynamic public func metadataCollector(_ metadataCollector: AVFoundation.AVPlayerItemMetadataCollector, didCollect metadataGroups: [AVFoundation.AVDateRangeMetadataGroup], indexesOfNewGroups: Foundation.IndexSet, indexesOfModifiedGroups: Foundation.IndexSet)
+}
+extension HMSHLSPlayerSDK.HMSHLSError {
+  public var isTerminal: Swift.Bool {
+    get
+  }
+}
+@objc @objcMembers public class HMSHLSStatsMonitor : ObjectiveC.NSObject {
+  @objc public var lastError: Swift.Error?
+  @objc weak public var delegate: HMSHLSPlayerSDK.HMSHLSPlayerDelegate?
+  @objc weak public var analytics: HMSAnalyticsSDK.HMSAnalytics?
+  @objc public init(player: AVFoundation.AVPlayer)
+  @objc public var estimatedBandwidth: Swift.Double {
+    @objc get
+  }
+  @objc public var bitrate: Swift.Double {
+    @objc get
+  }
+  @objc public var bytesDownloaded: Swift.Int64 {
+    @objc get
+  }
+  @objc public var bufferedDuration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc public var distanceFromLiveEdge: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc public var droppedFrames: Swift.Int {
+    @objc get
+  }
+  @objc public var videoSize: CoreGraphics.CGSize {
+    @objc get
+  }
+  @objc public var watchDuration: Foundation.TimeInterval {
+    @objc get
+  }
+  @objc override dynamic public func observeValue(forKeyPath keyPath: Swift.String?, of object: Any?, change: [Foundation.NSKeyValueChangeKey : Any]?, context: Swift.UnsafeMutableRawPointer?)
+  @objc deinit
+}
+@objc extension AVFoundation.AVDateRangeMetadataGroup {
+  @objc dynamic public func hmsPayloadString() -> Swift.String?
+}
+extension HMSHLSPlayerSDK.HMSHLSPlaybackState : Swift.Equatable {}
+extension HMSHLSPlayerSDK.HMSHLSPlaybackState : Swift.Hashable {}
+extension HMSHLSPlayerSDK.HMSHLSPlaybackState : Swift.RawRepresentable {}

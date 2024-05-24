@@ -1,0 +1,64 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name HMSBroadcastExtensionSDK
+import CoreMedia
+import Foundation
+@_exported import HMSBroadcastExtensionSDK
+import ReplayKit
+import Swift
+import VideoToolbox
+import _Concurrency
+import os.log
+import os
+@objc extension Foundation.NSNotification {
+  @objc public static var kHMSDidAddScreenTrack: Swift.String {
+    @objc get
+  }
+  @objc public static var kHMSDidRemoveScreenTrack: Swift.String {
+    @objc get
+  }
+}
+@_inheritsConvenienceInitializers @objc public class HMSScreenShareConstants : ObjectiveC.NSObject {
+  @objc public static let kHMSScreenOrientationKey: Swift.String
+  @objc public static let kHMSActiveSDKId: Swift.String
+  @objc public static let kHMSActiveSDKIdForAudio: Swift.String
+  @objc public static let kHMSScreenMachPortName: Swift.String
+  @objc public static let kHMSAudioMachPortName: Swift.String
+  @objc public static let kHMSScreenShareFPS: Swift.String
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class HMSScreenRendererError : ObjectiveC.NSObject, Swift.Error {
+  @objc final public let id: Swift.String
+  @objc final public let code: HMSBroadcastExtensionSDK.HMSScreenRendererErrorCode
+  @objc final public let message: Swift.String
+  @objc final public let info: Swift.String?
+  @objc final public let action: Swift.String?
+  @objc final public let params: [Swift.String : Any]?
+  @objc public init(id: Swift.String, code: HMSBroadcastExtensionSDK.HMSScreenRendererErrorCode, message: Swift.String, info: Swift.String? = nil, action: Swift.String? = nil, params: [Swift.String : Any]? = nil)
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc public var localizedDescription: Swift.String {
+    @objc get
+  }
+  @objc public var analyticsRepresentation: [Swift.String : Any] {
+    @objc get
+  }
+  @objc deinit
+}
+@objc public enum HMSScreenRendererErrorCode : Swift.Int {
+  case noActiveMeeting = 1000
+  case noAudioReceiverActive = 1001
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc extension HMSBroadcastExtensionSDK.HMSScreenRenderer {
+  @objc dynamic public func process(audioSampleBuffer: CoreMedia.CMSampleBuffer) -> HMSBroadcastExtensionSDK.HMSScreenRendererError?
+}
+extension HMSBroadcastExtensionSDK.HMSScreenRendererErrorCode : Swift.Equatable {}
+extension HMSBroadcastExtensionSDK.HMSScreenRendererErrorCode : Swift.Hashable {}
+extension HMSBroadcastExtensionSDK.HMSScreenRendererErrorCode : Swift.RawRepresentable {}
